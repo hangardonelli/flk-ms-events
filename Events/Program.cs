@@ -43,7 +43,7 @@ app.MapGet("/events", async (ClickHouseConnection connection, string? date) =>
         {
             return Results.BadRequest(new Response<Event>
             {
-                Message = "INVALID_DATE"
+                Message = "INVALID_DATE_ERROR"
             });
 
         }
