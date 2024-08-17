@@ -13,7 +13,7 @@ builder.Services.AddSingleton(sp =>
 {
     var connectionString = builder.Configuration.GetConnectionString("ClickHouseConnection");
     if (string.IsNullOrEmpty(connectionString))
-        throw new InvalidOperationException("La cadena de conexión a ClickHouse no está configurada. Compruebe si el archivo existe");
+        throw new InvalidOperationException("La cadena de conexión a ClickHouse no está configurada. Compruebe si el archivo existe!");
     return new ClickHouseConnection(connectionString);
 });
 
