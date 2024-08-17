@@ -5,15 +5,15 @@ using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Cargar configuración de appsettings.json
+// Cargar configuraciÃ³n de appsettings.json
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
-// Registrar la cadena de conexión en el contenedor de dependencias
+// Registrar la cadena de conexiÃ³n en el contenedor de dependencias
 builder.Services.AddSingleton(sp =>
 {
     var connectionString = builder.Configuration.GetConnectionString("ClickHouseConnection");
     if (string.IsNullOrEmpty(connectionString))
-        throw new InvalidOperationException("La cadena de conexión a ClickHouse no está configurada.");
+        throw new InvalidOperationException("La cadena de conexiÃ³n a ClickHouse no estÃ¡ configurada. Compruebe si el archivo existe");
     return new ClickHouseConnection(connectionString);
 });
 
@@ -29,7 +29,7 @@ app.MapGet("/events", async (ClickHouseConnection connection, string? date) =>
 
     await connection.OpenAsync();
 
-    // Si la fecha está especificada, convertirla y usarla en la consulta
+    // Si la fecha estÃ¡ especificada, convertirla y usarla en la consulta
     string query = "SELECT * FROM events.events";
     if (!string.IsNullOrEmpty(date))
     {
@@ -73,5 +73,5 @@ app.MapGet("/events", async (ClickHouseConnection connection, string? date) =>
     return Results.Ok(res);
 });
 
-// Iniciar la aplicación
+// Iniciar la aplicaciÃ³n
 app.Run();
