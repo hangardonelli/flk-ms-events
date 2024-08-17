@@ -1,6 +1,7 @@
 name: Deploy to VPS
 
 on:
+  workflow_dispatch:  # Permite la ejecución manual
   push:
     branches:
       - main # O la rama que uses para despliegues
@@ -8,22 +9,25 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: Dev  # Especifica el entorno a utilizar
+
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+        
         
       - name: Deploy to VPS
         run: |
-          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-            cd /root/flk/ms/Events
+          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            cd /root/flk/ms
+            sudo systemctl stop events
             git pull origin main
-            mkdir ready!
+            git pull origin master
+            mkdir -p ready!  # Corregido: mkdir necesita -p para no fallar si el directorio ya existe
+            dotnet publish --configuration Release --output ./publish
             # Aquí puedes agregar otros comandos para construir y reiniciar tu servicio
-            sudo systemctl restart nombre-del-servicio
+            sudo systemctl start events
           EOF
