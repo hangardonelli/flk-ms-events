@@ -14,8 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.7.0
+      
         
         
       - name: Deploy to VPS
@@ -24,7 +23,7 @@ jobs:
             cd /root/flk/ms/Events
             git pull origin main
             git pull origin master
-            mkdir ready!
+            mkdir -p ready!  # Corregido: mkdir necesita -p para no fallar si el directorio ya existe
             # Aquí puedes agregar otros comandos para construir y reiniciar tu servicio
             sudo systemctl restart nombre-del-servicio
           EOF
