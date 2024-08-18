@@ -4,7 +4,7 @@ on:
   workflow_dispatch:  # Permite la ejecución manual
   push:
     branches:
-      - main # O la rama que uses para despliegues
+      - master
 
 jobs:
   deploy:
@@ -24,10 +24,14 @@ jobs:
           sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             cd /root/flk/ms
             sudo systemctl stop events
-            git pull origin main
+            echo events service stopped
             git pull origin master
-            mkdir -p ready!  # Corregido: mkdir necesita -p para no fallar si el directorio ya existe
+            echo pull from github done
+            dotnet restore
+            echo dotnet package restore done
+            mkdir -p ready!
             dotnet publish --configuration Release --output ./publish
-            # Aquí puedes agregar otros comandos para construir y reiniciar tu servicio
+            echo compiled!! 
             sudo systemctl start events
+            echo events service is running!
           EOF
