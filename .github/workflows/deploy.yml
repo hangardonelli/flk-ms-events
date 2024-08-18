@@ -22,7 +22,7 @@ jobs:
       - name: Deploy to VPS
         run: |
           sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-            cd /root/flk/ms
+            cd /root/flk/ms/flk-ms-events
             sudo systemctl stop events
             echo events service stopped
             git pull origin master
